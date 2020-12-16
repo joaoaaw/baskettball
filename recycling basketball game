@@ -117,28 +117,27 @@ void loop() {
  
 //INICIALIZCAO DO TIMER
 
-   //funcao parkour para realizar a funcao sempre a cada 1 segundo
    if(millis() - currentTime1 >= interval_1 ){ 
     
-     currentTime1 = millis();
+     currentTime1 = millis(); //essa troca de variaveis, vai criar no programa o espaço de tempo em que a funcao do timer ocorrera após o programa se iniciar
   
    if(j <= 30){  
        
      j = j - 1; //vai diminuindo de 1 do tempo a cada 1 segundo
-     display.showNumberDec(j, false, 2, 0);
-      
+     display.showNumberDec(j, false, 2, 0); 
+  // display.showNumberDec(digito mostrado no display, se terá zeros nas casas restantes, numero de digitos na tela, posicao do ultimo digito (esqueda para direita)) 
     }
   }
-    if (d < 11){
+    if (d < 15){
     
      i = i+2;
-     delay(150);//esse delay nao vai travar o timer uma vez que ele esta funcionando pela funcao millis 
+     delay(150);//esse delay nao vai travar o timer por conta da funcao millis. E seu obejetivo é que a medição da distância não seja muito rápida, contando uma cesta mais de uma vez.
      display.showNumberDec(i, false, 2, 2);
      highscore = i; //guarda a pontucao
     }
 
  
-  if(highscore < previous_highscore){ //compara a pontucao anterior com a obtida imediatamente
+  if(highscore < previous_highscore){ //compara a pontucao anterior com a obtida imediatamente. Se for maior a atual, troca. Se for menor, a antiga se mantem.
     
     highscore = previous_highscore;
   } 
@@ -155,12 +154,11 @@ void loop() {
   
 
  /* Comandos da biblioteca do display
-  *  
-  *  
-  *display.showNumberDec(a, b, c, d, 1)
+  *  display.clear();
+   
+  *display.showNumberDec(a, b, c, d)
   
   * a = numero de 0 ate 9999
   * b = Ture/false. com o seu o complento de zeros
   * c = corresnponde ao numeto de digitos no display
   * d = posicao do digito menos significativo (0 o mais a esquerda | 3 o mais a direita) 0 =--------> 3
-  * raulguedert@gmail.com*/
