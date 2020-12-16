@@ -1,0 +1,166 @@
+/*--------------------------------------------------------------------------------------------------/
+/---------------------------------------------DISLPLAY---------------------------------------------/
+/------------------------------------------------------------------------------------------------*/
+
+#include <TM1637Display.h>
+#define CLK 12 
+#define DIO 9 
+ 
+int i = 0; //contador cestas
+int highscore = 0; //total das cestas feitas
+int previous_highscore = 0; //total anterior para comparacao
+int j = 30; //timer
+
+//buzzer
+#define buzzer 7
+int dt = 300;
+
+/*--------------------------------------------------------------------------------------------------/
+/---------------------------------------------SENSOR-----------------------------------------------/
+/------------------------------------------------------------------------------------------------*/
+
+#define triggerPin 2 //manda o sinal
+#define ecoPin 4 //recebe o sinal
+
+long int travelTime;
+float d; 
+
+
+/*--------------------------------------------------------------------------------------------------/
+/--------------------------------------FUNCAO MILLIS-----------------------------------------------/
+/------------------------------------------------------------------------------------------------*/
+
+const unsigned long interval_1 = 1000; // intervalo de tempo que o evento em que o evento se repeti
+const unsigned long interval_2 = 1000;
+unsigned long currentTime1 = 0; //tempo incial que servira para locomover o miilis()
+unsigned long currentTime2 = 0;
+
+
+
+/*--------------------------------------------------------------------------------------------------/
+/---------------------------------------------FUNCOES----------------------------------------------/
+/------------------------------------------------------------------------------------------------*/
+ 
+float distance (long travelTime){
+  
+ return d = (0.0343/2) *travelTime;
+  }
+  
+long tempo (){
+    
+    digitalWrite(triggerPin, LOW);//garantir que esta desligado
+    delayMicroseconds(10);
+    digitalWrite(triggerPin, HIGH);
+    delayMicroseconds(10);
+    digitalWrite(triggerPin, LOW);
+  
+  return travelTime = pulseIn(ecoPin, HIGH);//le o tempo (microsegundos) que o sensor percebe o sinal;
+ }
+
+  
+void movimento_parkour(){
+
+  if(j<2){
+    digitalWrite(buzzer, HIGH);
+  }
+  if(j<1){
+    digitalWrite(buzzer, LOW);
+  }
+  
+
+
+}
+
+
+//inicializacao de display
+TM1637Display display(CLK, DIO); // declaracao e inicializacao do display (inclusive os pinos)
+
+void setup() {
+
+//pinos do sensor de movimentos
+  pinMode(triggerPin, OUTPUT);
+  pinMode(ecoPin, INPUT);
+  pinMode(buzzer, OUTPUT);
+  
+  Serial.begin(9600);
+  
+}
+
+void loop() {
+//sensor
+    
+  tempo();
+  distance(travelTime);
+  previous_highscore = highscore; //guarda o maior highscore e compara com o proximo score
+  
+  display.showNumberDec(highscore, false, 2, 2); 
+
+//funcao para reiniciar o programa e zerar o timer
+
+  if(d<15){
+    
+    j =30; 
+    i = 0;
+  }
+
+  while (j!= 0){   
+    
+  tempo();
+  distance(travelTime);
+  
+
+//O que vai aparecendo no display enquando estamos no loop
+    
+     display.setBrightness(6); // display.setBrightness(7); // parametro do brlho vai de 0 ate 7
+     display.showNumberDec(i, false, 2, 2);
+ 
+ 
+//INICIALIZCAO DO TIMER
+
+   //funcao parkour para realizar a funcao sempre a cada 1 segundo
+   if(millis() - currentTime1 >= interval_1 ){ 
+    
+     currentTime1 = millis();
+  
+   if(j <= 30){  
+       
+     j = j - 1; //vai diminuindo de 1 do tempo a cada 1 segundo
+     display.showNumberDec(j, false, 2, 0);
+      
+    }
+  }
+    if (d < 11){
+    
+     i = i+2;
+     delay(150);//esse delay nao vai travar o timer uma vez que ele esta funcionando pela funcao millis 
+     display.showNumberDec(i, false, 2, 2);
+     highscore = i; //guarda a pontucao
+    }
+
+ 
+  if(highscore < previous_highscore){ //compara a pontucao anterior com a obtida imediatamente
+    
+    highscore = previous_highscore;
+  } 
+
+  movimento_parkour();//funcao para apitar o buzzer
+  
+  
+ } //fecha o while
+ 
+ 
+} //fecha o void
+
+
+  
+
+ /* Comandos da biblioteca do display
+  *  
+  *  
+  *display.showNumberDec(a, b, c, d, 1)
+  
+  * a = numero de 0 ate 9999
+  * b = Ture/false. com o seu o complento de zeros
+  * c = corresnponde ao numeto de digitos no display
+  * d = posicao do digito menos significativo (0 o mais a esquerda | 3 o mais a direita) 0 =--------> 3
+  * raulguedert@gmail.com*/
