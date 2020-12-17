@@ -1,5 +1,5 @@
 /*--------------------------------------------------------------------------------------------------/
-/---------------------------------------------DISLPLAY---------------------------------------------/
+/------------------------------------DISLPLAY-&-BUZZER---------------------------------------------/
 /------------------------------------------------------------------------------------------------*/
 
 #include <TM1637Display.h>
@@ -7,13 +7,12 @@
 #define DIO 9 
  
 int i = 0; //contador cestas
-int highscore = 0; //total das cestas feitas
-int previous_highscore = 0; //total anterior para comparacao
-int j = 30; //timer
+int highscore = 0; //total das cestas feitas na partida atual
+int previous_highscore = 0; //total da pontucao anterior para comparacao
+int j = 30; //contador do timer
 
 //buzzer
 #define buzzer 7
-int dt = 300;
 
 /*--------------------------------------------------------------------------------------------------/
 /---------------------------------------------SENSOR-----------------------------------------------/
@@ -67,8 +66,6 @@ void movimento_parkour(){
     digitalWrite(buzzer, LOW);
   }
   
-
-
 }
 
 
@@ -111,7 +108,7 @@ void loop() {
 
 //O que vai aparecendo no display enquando estamos no loop
     
-     display.setBrightness(6); // display.setBrightness(7); // parametro do brlho vai de 0 ate 7
+     display.setBrightness(6); // display.setBrightness(7); ===> parametro do brlho vai de 0 ate 7
      display.showNumberDec(i, false, 2, 2);
  
  
